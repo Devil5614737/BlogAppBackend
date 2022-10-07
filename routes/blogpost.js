@@ -5,12 +5,13 @@ const auth = require("../middleware/auth");
 const Blog = require("../models/blog");
 
 router.post("/create-blog", auth, async (req, res) => {
-  const { title, content, image, category } = req.body;
+  const { title,subtitle, content, image, category } = req.body;
   const newPost = new Post({
     title,
     content,
     image,
     category,
+    subtitle,
     postedBy: req.user._id,
   });
 
@@ -36,6 +37,24 @@ router.get("/all-blogs", async (req, res) => {
     return res.status(400).send(e);
   }
 });
+
+// full blog
+
+router.get("/all-blogs/:id", async (req, res) => {
+  const id=req.params.id
+  try {
+    const blog = await Blog.findById(id).populate(
+      "postedBy",
+      "_id username displayPic"
+    );
+
+    return res.status(200).json(blog);
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+});
+
+
 
 //searching by category
 
@@ -74,7 +93,7 @@ router.get("/search", auth, async (req, res) => {
 });
 
 // my  blogs
-router.get("/my-blogs", auth, async (req, res) => {
+router.get("/my-blog", auth, async (req, res) => {
   const blogs = await Blog.find({ postedBy: req.user._id }).populate(
     "postedBy",
     "_id  username email displayPic"
