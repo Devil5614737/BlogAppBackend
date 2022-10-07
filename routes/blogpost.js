@@ -93,7 +93,7 @@ router.get("/search", auth, async (req, res) => {
 });
 
 // my  blogs
-router.get("/my-blog", auth, async (req, res) => {
+router.get("/myblog", auth, async (req, res) => {
   const blogs = await Blog.find({ postedBy: req.user._id }).populate(
     "postedBy",
     "_id  username email displayPic"
@@ -144,13 +144,17 @@ router.put("/comment", auth, (req, res) => {
     });
 });
 
+
+
 router.put("/edit", auth, async (req, res) => {
+    const { title,subtitle, content, category } = req.body;
   const blog = await Blog.findByIdAndUpdate(req.body.blogId, {
     $set: {
-      title: req.body.title,
-      content: req.body.content,
-      image: req.body.image,
-      category: req.body.category,
+      title,
+      content,
+    image:"",
+      category,
+      subtitle
     },
   });
   try {

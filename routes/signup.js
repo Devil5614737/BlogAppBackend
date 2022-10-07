@@ -5,12 +5,12 @@ const bcrypt = require("bcrypt");
 const Validate = require("../validation/signupValidation");
 
 router.post("/signup", async (req, res) => {
-  const { username, email, password, displayPic } = req.body;
+  const { username, email, password } = req.body;
   const newUser = new User({
     username,
     email,
     password,
-    displayPic,
+    displayPic:"",
   });
 
   const error = Validate(req.body);
